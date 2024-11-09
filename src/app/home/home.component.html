@@ -4,225 +4,297 @@
     </div>
     <div class="language">
       <mat-form-field appearance="outline">
-        <ng-template matPrefix>
-          <mat-icon>language</mat-icon>
-        </ng-template>
         <mat-label>Language</mat-label>
         <mat-select
           [(value)]="selectedLanguage"
           (selectionChange)="onLanguageChange($event)"
+          class="with-custom-icon"
         >
           <mat-option *ngFor="let language of languages" [value]="language.code">
             {{ language.name }}
           </mat-option>
         </mat-select>
+        <mat-icon class="custom-icon">language</mat-icon>
       </mat-form-field>
     </div>
   </div>
   
   <mat-sidenav-container>
     <mat-sidenav #sidenav mode="side" [opened]="true">
-      <div class="side-content">
-        <div class="sidebar-header">
-          <h3>Start chat</h3>
-          <button mat-icon-button (click)="sidenav.toggle()" class="toggle-btn">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-        </div>
-        <div class="sidebar-title">Enter shipment details to get fast, AI-powered transport solutions</div>
-          
-        <div class="sidebar-subtitle">To start chat bot, provide your shipment details below to and get real-time assistance from our virtual dispatcher.</div>
-        <!-- Loading Locations -->
-        <div class="form">
-          <!-- Loading Location Section -->
-          <mat-form-field appearance="outline">
-            <mat-label>Loading Location</mat-label>
-            <input
-              type="text"
-              matInput
-              [matAutocomplete]="auto"
-              [(ngModel)]="selectedLoadingLocation"
-              (input)="filterLocations($event, 'loading')"
-            />
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option
-                *ngFor="let location of filteredLoadingLocations"
-                [value]="location.city"
-              >
-                {{ location.city }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-icon matSuffix>location_on</mat-icon>
-          </mat-form-field>
-  
-          <!-- Loading Date and Time -->
-          <div class="delivery-datetime">
-            <!-- Delivery Date for Loading -->
-            <mat-form-field appearance="outline" class="date-field">
-              <mat-label>Loading Date</mat-label>
-              <input
-                matInput
-                [matDatepicker]="loadingDatePicker"
-                [(ngModel)]="selectedLoadingDate"
-                placeholder="Select loading date"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="loadingDatePicker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #loadingDatePicker></mat-datepicker>
-            </mat-form-field>
-  
-            <!-- Delivery Time for Loading -->
-            <mat-form-field appearance="outline" class="time-field">
-              <mat-label>Loading Time</mat-label>
-              <mat-select
-                placeholder="Select loading time"
-                [(ngModel)]="selectedLoadingTime"
-              >
-                <mat-option *ngFor="let time of deliveryTimes" [value]="time">{{
-                  time
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
+      <div *ngIf="isChatStarted; else startChatForm" class="terminal-container">
+        <div class="side-content">
+          <div class="sidebar-header">
+            <h3>Chatbot log</h3>
+            <button mat-icon-button (click)="sidenav.toggle()" class="toggle-btn">
+              <mat-icon>keyboard_double_arrow_left</mat-icon>
+            </button>
           </div>
-  
-          <!-- Unloading Location Section -->
-          <mat-form-field appearance="outline">
-            <mat-label>Unloading Location</mat-label>
-            <input
-              type="text"
-              matInput
-              [matAutocomplete]="autoUnloading"
-              [(ngModel)]="selectedUnloadingLocation"
-              (input)="filterLocations($event, 'unloading')"
-            />
-            <mat-autocomplete #autoUnloading="matAutocomplete">
-              <mat-option
-                *ngFor="let location of filteredUnloadingLocations"
-                [value]="location.city"
-              >
-                {{ location.city }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-icon matSuffix>location_on</mat-icon>
-          </mat-form-field>
-  
-          <!-- Unloading Date and Time -->
-          <div class="delivery-datetime">
-            <!-- Delivery Date for Unloading -->
-            <mat-form-field appearance="outline" class="date-field">
-              <mat-label>Unloading Date</mat-label>
-              <input
-                matInput
-                [matDatepicker]="unloadingDatePicker"
-                [(ngModel)]="selectedUnloadingDate"
-                placeholder="Select unloading date"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="unloadingDatePicker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #unloadingDatePicker></mat-datepicker>
-            </mat-form-field>
-  
-            <!-- Delivery Time for Unloading -->
-            <mat-form-field appearance="outline" class="time-field">
-              <mat-label>Unloading Time</mat-label>
-              <mat-select
-                placeholder="Select unloading time"
-                [(ngModel)]="selectedUnloadingTime"
-              >
-                <mat-option *ngFor="let time of deliveryTimes" [value]="time">{{
-                  time
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
+        <!-- Terminal-style content explaining chatbot's answers -->
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-title">Terminal - Chatbot Explanation</div>
           </div>
-  
-          <!-- Price -->
-          <mat-form-field appearance="outline">
-            <mat-label>Price</mat-label>
-            <input matInput [(ngModel)]="selectedPrice" placeholder="Enter price" />
-            <mat-icon matSuffix>euro_symbol</mat-icon>
-          </mat-form-field>
+          <div class="terminal-content">
+          <p><strong>Terminal:</strong> {{ displayedTerminalMessage }}</p>
         </div>
-  
-        <div class="button-container">
-          <button mat-raised-button color="primary" class="button" (click)="onSubmit()">
-            Start chat
-          </button>
         </div>
+        </div> 
       </div>
+      <ng-template #startChatForm>
+        <div class="side-content">
+          <div class="sidebar-header">
+            <h3>Start chat</h3>
+            <button mat-icon-button (click)="sidenav.toggle()" class="toggle-btn">
+              <mat-icon>keyboard_double_arrow_left</mat-icon>
+            </button>
+          </div>
+          <div class="sidebar-title">Enter shipment details to get fast, AI-powered transport solutions</div>
+            
+          <div class="sidebar-subtitle">To start chat bot, provide your shipment details below to and get real-time assistance from our virtual dispatcher.</div>
+          <!-- Loading Locations -->
+          <div class="form">
+            <!-- Loading Location Section -->
+            <mat-form-field appearance="outline">
+              <mat-label>Loading Location</mat-label>
+              <input
+                type="text"
+                matInput
+                [matAutocomplete]="auto"
+                [(ngModel)]="selectedLoadingLocation"
+                (input)="filterLocations($event, 'loading')"
+                required
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let location of filteredLoadingLocations"
+                  [value]="location.city"
+                >
+                  {{ location.city }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-icon matSuffix>location_on</mat-icon>
+            </mat-form-field>
+    
+            <!-- Loading Date and Time -->
+            <div class="delivery-datetime">
+              <!-- Delivery Date for Loading -->
+              <mat-form-field appearance="outline" class="date-field">
+                <mat-label>Loading Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="loadingDatePicker"
+                  [(ngModel)]="selectedLoadingDate"
+                  placeholder="Select loading date"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="loadingDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #loadingDatePicker></mat-datepicker>
+              </mat-form-field>
+    
+              <!-- Delivery Time for Loading -->
+              <mat-form-field appearance="outline" class="time-field">
+                <mat-label>Loading Time</mat-label>
+                <mat-select
+                  placeholder="Select loading time"
+                  [(ngModel)]="selectedLoadingTime"
+                  class="with-custom-icon"
+                  required
+                >
+                  <mat-option *ngFor="let time of deliveryTimes" [value]="time">{{
+                    time
+                  }}</mat-option>
+                </mat-select>
+                <mat-icon class="custom-icon">access_time</mat-icon>
+              </mat-form-field>
+            </div>
+    
+            <!-- Unloading Location Section -->
+            <mat-form-field appearance="outline">
+              <mat-label>Unloading Location</mat-label>
+              <input
+                type="text"
+                matInput
+                [matAutocomplete]="autoUnloading"
+                [(ngModel)]="selectedUnloadingLocation"
+                (input)="filterLocations($event, 'unloading')"
+                required
+              />
+              <mat-autocomplete #autoUnloading="matAutocomplete">
+                <mat-option
+                  *ngFor="let location of filteredUnloadingLocations"
+                  [value]="location.city"
+                >
+                  {{ location.city }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-icon matSuffix>location_on</mat-icon>
+            </mat-form-field>
+    
+            <!-- Unloading Date and Time -->
+            <div class="delivery-datetime">
+              <!-- Delivery Date for Unloading -->
+              <mat-form-field appearance="outline" class="date-field">
+                <mat-label>Unloading Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="unloadingDatePicker"
+                  [(ngModel)]="selectedUnloadingDate"
+                  placeholder="Select unloading date"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="unloadingDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #unloadingDatePicker></mat-datepicker>
+              </mat-form-field>
+    
+              <!-- Delivery Time for Unloading -->
+              <mat-form-field appearance="outline" class="time-field">
+                <mat-label>Unloading Time</mat-label>
+                <mat-select
+                  placeholder="Select unloading time"
+                  [(ngModel)]="selectedUnloadingTime"
+                  class="with-custom-icon"
+                  required
+                >
+                  <mat-option *ngFor="let time of deliveryTimes" [value]="time">{{
+                    time
+                  }}</mat-option>
+                </mat-select>
+                <mat-icon class="custom-icon">access_time</mat-icon>
+              </mat-form-field>
+            </div>
+    
+            <!-- Price -->
+            <mat-form-field appearance="outline">
+              <mat-label>Price</mat-label>
+              <input matInput [(ngModel)]="selectedPrice" placeholder="Enter price" required />
+              <mat-icon matSuffix>euro_symbol</mat-icon>
+            </mat-form-field>
+          </div>
+    
+          <div class="button-container">
+            <button 
+              mat-raised-button 
+              color="primary" class="button" 
+              (click)="onSubmit()"
+              [disabled]="!isFormValid()"
+              [ngClass]="{'disabled': !isFormValid()}">
+              Start chat
+            </button>
+          </div>
+        </div>
+
+      </ng-template>
     </mat-sidenav>
   
     <mat-sidenav-content>
-      <div class="content-wrapper">
-        <button
-          *ngIf="!sidenav.opened"
-          mat-icon-button
-          (click)="sidenav.toggle()"
-          class="show-sidebar-btn"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-  
-        <!-- Chatbot in Main Content -->
-        <div class="main-content">
-          <div class="title-container">
-            <!-- <h2 class="title">Chatbot</h2> -->
-            <div class="chatbot-info">
-              <div class="icon-container">
-                <mat-icon>local_shipping</mat-icon>
-              </div>
-              <div class="info">
-                <div class="title">Optimize Your Shipment Tendering with Our AI-Powered Dispatcher</div>
-                <div class="subtitle">This conversation is between you and GRUBER LOGISTICS</div>
-             </div>
-             </div>
-          </div>
-          <div class="chat-container">
-            <div class="chat-box">
-              <div class="chat-message">
-                <div class="message user">
-                  <div class="message-box">
-                    <div class="user">
-                      <mat-icon class="user-icon">account_circle</mat-icon>
-                    </div>
-                    <p>
-                      Hi, I'm your virtual assistant. How can I help you today?
-                    </p>
-                  </div>
+      <div *ngIf="!isChatStarted; else chatBot" class="content-container">
+        <div class="content-wrapper">
+          <button
+            *ngIf="!sidenav.opened"
+            mat-icon-button
+            (click)="sidenav.toggle()"
+            class="show-sidebar-btn"
+          >
+            <mat-icon>keyboard_double_arrow_right</mat-icon>
+          </button>
+    
+          <!-- Chatbot in Main Content -->
+          <div class="main-content-info">
+            <div class="title-container">
+              <!-- <h2 class="title">Chatbot</h2> -->
+              <div class="chatbot-info">
+                <div class="icon-container">
+                  <mat-icon>local_shipping</mat-icon>
                 </div>
+                <div class="info">
+                  <div class="title">Optimize Your Shipment Tendering with Our AI-Powered Dispatcher</div>
+                  <div class="subtitle">This conversation is between you and GRUBER LOGISTICS</div>
+               </div>
               </div>
-              <div class="chat-message">
-                <div class="message bot">
-                  <div class="message-box">
-                    <p>
-                      Hi, I'm your virtual assistant. How can I help you today?
-                    </p>
-                    <div class="bot">
-                      <img src="/avatar.png" alt="Avatar" width="40"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <div class="content">Our AI bot will analyze your criteria, review supplier performance, and communicate with the best available suppliers across Europe in their native language. Streamline your transport arrangements and reduce manual effort for faster, reliable solutions.</div>
             </div>
-  
-            <div class="chat-input-container">
-              <div class="chat-input">
-                <input class="custom-input" type="text" placeholder="Type a message" />
-                <button class="microphone-button" mat-icon-button color="primary">
-                  <mat-icon class="message-icon">mic</mat-icon>
-                </button>
-                <button class="send-button" mat-icon-button color="primary">
-                  <mat-icon class="message-icon">send</mat-icon>
-                </button>
-              </div>
-            </div>          
           </div>
         </div>
       </div>
+      <ng-template #chatBot>
+        <div class="content-wrapper">
+          <button
+            *ngIf="!sidenav.opened"
+            mat-icon-button
+            (click)="sidenav.toggle()"
+            class="show-sidebar-btn"
+          >
+            <mat-icon>keyboard_double_arrow_right</mat-icon>
+          </button>
+    
+          <!-- Chatbot in Main Content -->
+          <div class="main-content">
+            <div class="title-container">
+              <!-- <h2 class="title">Chatbot</h2> -->
+              <div class="chatbot-info">
+                <div class="icon-container">
+                  <mat-icon>local_shipping</mat-icon>
+                </div>
+                <div class="info">
+                  <div class="title">Optimize Your Shipment Tendering with Our AI-Powered Dispatcher</div>
+                  <div class="subtitle">This conversation is between you and GRUBER LOGISTICS</div>
+               </div>
+               </div>
+            </div>
+            <div class="chat-container">
+              <div class="chat-box">
+                <div class="chat-message typing-indicator">
+                  <div class="message bot">
+                    <div class="message-box">
+                      <div class="bot">
+                        <img src="/avatar.png" alt="Avatar" width="40"/>
+                      </div>
+                      <div>
+                        {{ displayedChatbotMessage }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>    
+              <div *ngIf="typingIndicator" class="chat-box">
+                <div class="chat-message typing-indicator">
+                  <div class="message bot">
+                    <div class="message-box">
+                      <div class="bot">
+                        <img src="/avatar.png" alt="Avatar" width="40"/>
+                      </div>
+                      <div class="dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>    
+            </div>
+    
+            <div class="chat-input-container" [ngClass]="isSidenavOpened() ? 'sidebar-open': ''">
+              <div class="chat-input">
+                <input class="custom-input" type="text" placeholder="Type a message" [(ngModel)]="userMessage" />
+                <button class="microphone-button" mat-icon-button color="primary">
+                  <mat-icon class="message-icon">mic</mat-icon>
+                </button>
+                <button class="send-button" mat-icon-button color="primary" (click)="onSendMessage()">
+                  <mat-icon class="message-icon">send</mat-icon>
+                </button>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </ng-template>
+      
     </mat-sidenav-content>
   </mat-sidenav-container>
   
