@@ -32,10 +32,10 @@
         <!-- Terminal-style content explaining chatbot's answers -->
         <div class="terminal">
           <div class="terminal-header">
-            <div class="terminal-title">Terminal - Chatbot Explanation</div>
+            <div class="terminal-title">Terminal - Chatbot</div>
           </div>
           <div class="terminal-content">
-          <p><strong>Terminal:</strong> {{ displayedTerminalMessage }}</p>
+          <p><strong>Explanation:</strong> {{ displayedTerminalMessage }}</p>
         </div>
         </div>
         </div> 
@@ -206,7 +206,13 @@
     
           <!-- Chatbot in Main Content -->
           <div class="main-content-info">
-            <div class="title-container">
+            <div *ngIf="isLoading">
+              <div class="loading-container">
+                <div class="loading-text">Finding the best solution...</div>
+                <mat-spinner diameter="50"></mat-spinner>
+              </div>
+            </div>
+            <div *ngIf="!isLoading" class="title-container">
               <!-- <h2 class="title">Chatbot</h2> -->
               <div class="chatbot-info">
                 <div class="icon-container">
@@ -261,23 +267,21 @@
                     </div>
                   </div>
                 </div>
-              </div>    
-              <div *ngIf="typingIndicator" class="chat-box">
-                <div class="chat-message typing-indicator">
-                  <div class="message bot">
+              </div>  
+              <div *ngFor="let msg of messages" class="chat-box">
+                <div class="chat-message" [ngClass]="msg.sender">
+                  <div class="message">
                     <div class="message-box">
-                      <div class="bot">
-                        <img src="/avatar.png" alt="Avatar" width="40"/>
+                      <div class="text">
+                        {{ msg.text }}
                       </div>
-                      <div class="dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                      <div class="bot" *ngIf="msg.sender === 'bot'">
+                        <img src="/avatar.png" alt="Avatar" width="40"/>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>    
+              </div>
             </div>
     
             <div class="chat-input-container" [ngClass]="isSidenavOpened() ? 'sidebar-open': ''">

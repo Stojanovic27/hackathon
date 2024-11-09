@@ -17,6 +17,13 @@ export interface SubmissionData {
   price: number;
 }
 
+interface Message {
+  id: number;              // Unique ID for each message
+  sender: 'user' | 'bot';  // To differentiate between user and bot messages
+  text: string;            // The message content
+  timestamp?: Date;        // Optionally add a timestamp
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -52,8 +59,11 @@ export class HomeComponent implements OnInit {
   deliveryTimes: string[] = this.generateDeliveryTimes();
 
   isChatStarted = false;
+  isLoading = false;
 
   userMessage: string = '';
+  messages: Message[] = [];
+  messageId: number = 0;
 
   typingIndicator = false;
 
@@ -97,11 +107,14 @@ export class HomeComponent implements OnInit {
       } else {
         clearInterval(interval); // Stop when message is fully displayed
       }
-    }, 50); // Adjust typing speed (in ms)
+    }, 10); // Adjust typing speed (in ms)
   }
 
   // Submit Handler
   onSubmit(): void {
+    // Set loading state to true
+    this.isLoading = true;
+  
     const formattedLoadingDate = this.formatDateToYYMMDD(this.selectedLoadingDate);
     const formattedUnloadingDate = this.formatDateToYYMMDD(this.selectedUnloadingDate);
   
@@ -147,12 +160,18 @@ export class HomeComponent implements OnInit {
         // Start typing effect for chatbot and terminal messages
         this.startTypingEffect(chatbotMessage, 'chatbot');
         this.startTypingEffect(terminalMessage, 'terminal');
+  
+        // Set loading state to false once response is received
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Dispatch error:', error);
+        // Set loading state to false if an error occurs
+        this.isLoading = false;
       }
     });
   }
+  
   
   
   isFormValid(): boolean {
@@ -162,7 +181,8 @@ export class HomeComponent implements OnInit {
       this.selectedLoadingTime &&
       this.selectedUnloadingLocation &&
       this.selectedUnloadingDate &&
-      this.selectedUnloadingTime
+      this.selectedUnloadingTime &&
+      this.selectedPrice
     ) ? true : false;
   }
   
@@ -243,24 +263,50 @@ export class HomeComponent implements OnInit {
 
   onSendMessage(): void {
     if (this.userMessage.trim()) {
-      const message = this.userMessage;  // Get the message from the input
-      const conversation_id = localStorage.getItem('conversationId');
+      const message = this.userMessage;
+      const id_conversation = localStorage.getItem('conversationId');
       
-      // Send the message via the service
-      this.service.sendMessage(message, conversation_id!).subscribe({
+      // Increment the message ID for the user message
+      const userMessage: Message = {
+        id: this.messageId++,  // Increment ID
+        sender: 'user',
+        text: message
+      };
+      this.messages.push(userMessage);  // Add user message to the messages array
+      this.userMessage = '';  // Clear the input field after sending
+  
+      this.isLoading = true;  // Show loader while waiting for response
+  
+      // Send message to the service
+      this.service.sendMessage(message, id_conversation!).subscribe({
         next: (response) => {
           console.log('Message sent:', response);
-          this.userMessage = '';  // Clear the input field after sending
-          this.showTypingIndicator();  // Show typing indicator
+          this.isLoading = false;
+  
+          // Show typing indicator (if applicable)
+          this.showTypingIndicator();
+  
+          // Simulate or process the bot's response
+          const botMessage = response.message || 'This is a bot response to: ' + message;  // You can adjust this based on your API response format
+          const botMessageObj: Message = {
+            id: this.messageId++,  // Increment ID for the bot message
+            sender: 'bot',
+            text: botMessage
+          };
+          
+          // Add bot message to the messages array
+          this.messages.push(botMessageObj);  
         },
         error: (error) => {
           console.error('Error sending message:', error);
+          this.isLoading = false;
         }
       });
     } else {
       console.log('Message cannot be empty');
     }
   }
+  
 
   showTypingIndicator(): void {
     this.typingIndicator = true;

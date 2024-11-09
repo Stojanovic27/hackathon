@@ -94,6 +94,7 @@ mat-sidenav-container {
 .content-wrapper {
   position: relative;
   height: 100%;
+  width: 100%;
 
   .show-sidebar-btn {
     position: absolute;
@@ -113,12 +114,22 @@ mat-sidenav-container {
   height: 100%;
 }
 
+.loading-container {
+  justify-items: center;
+  .loading-text {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+}
+
 .main-content-info {
   padding: 20px;
   background-color: $background-color;
   display: flex;
   height: calc(100% - 40px);
   align-items: center;
+  width: calc(100% - 45px);
+  justify-content: center;
   // width: 100%;
 
   .title-container {
@@ -214,7 +225,7 @@ mat-sidenav-container {
             display: flex;
             flex-direction: column;
             // height: 100%;
-            overflow-y: scroll;
+            // overflow-y: scroll;
 
             .chat-message {
                 .message {

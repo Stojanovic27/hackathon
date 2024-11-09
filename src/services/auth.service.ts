@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 
 interface RegisterPayload {
   username: string;
@@ -41,7 +41,7 @@ export interface DispatchPayload {
 export interface DispatchResponse {
   reason_why_you_choose_this_partner: string;
   direct_message: string;
-  // conversation_id: string;
+  id_conversation: string;
 }
 
 @Injectable({
@@ -83,12 +83,18 @@ export class AuthService {
       catchError(error => {
         // Handle errors here
         console.error('Error dispatching:', error);
-        return [];
+        return []; // Return an empty array or handle the error as needed
+      }),
+      tap((response: DispatchResponse) => {
+        // Save the conversation ID to localStorage
+        if (response && response.id_conversation) {
+          localStorage.setItem('conversationId', response.id_conversation);
+        }
       })
     );
   }
 
-  sendMessage(message: string, conversation_id: string): Observable<any> {
-    return this.http.post(`/dispatcher/${conversation_id}/send_message`, { message });
+  sendMessage(message: string, id_conversation: string): Observable<any> {
+    return this.http.patch(`/dispatcher`, { message, id_conversation });
   }
 }
