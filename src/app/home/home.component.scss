@@ -152,7 +152,7 @@ mat-sidenav-container {
       flex-direction: row;
       gap: 1rem;
       width: 100%;
-      justify-content: center;
+      // justify-content: center;
       border-bottom: 0.5px solid $border-color;
 
       .info {
@@ -258,7 +258,7 @@ mat-sidenav-container {
     .message-box {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      // align-items: center;
       margin: 10px 0;
     }
     
@@ -297,11 +297,16 @@ mat-sidenav-container {
 
 .typing-indicator .message-box {
   display: flex;
-  align-items: center;
+  // align-items: center;
   background-color: $green2;
   border-radius: 0.5rem;
   padding: 0.5rem;
   max-width: 70%;
+
+  &.mobile {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
 }
 
 .dots {
@@ -350,6 +355,10 @@ mat-sidenav-container {
 
   &.sidebar-open {
     width: calc(100% - 490px);
+  }
+
+  &.mobile {
+    position: relative;
   }
 }
 

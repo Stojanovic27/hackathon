@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   getAvailableCities(): Observable<CityLocation[]> {
-    return this.http.get<CityLocation[]>(`/dispatcher/cities`).pipe(
+    return this.http.get<CityLocation[]>(`/api/dispatcher/cities`).pipe(
       map(response => {
         // Map each item in response to ensure it matches CityLocation interface if needed
         console.log("response", response);
@@ -79,7 +79,7 @@ export class AuthService {
 
   // Method to call the /dispatcher POST API
   dispatch(payload: DispatchPayload): Observable<DispatchResponse> {
-    return this.http.post<DispatchResponse>('/dispatcher', payload).pipe(
+    return this.http.post<DispatchResponse>('/api/dispatcher', payload).pipe(
       catchError(error => {
         // Handle errors here
         console.error('Error dispatching:', error);
@@ -95,6 +95,6 @@ export class AuthService {
   }
 
   sendMessage(message: string, id_conversation: string): Observable<any> {
-    return this.http.patch(`/dispatcher`, { message, id_conversation });
+    return this.http.patch(`/api/dispatcher`, { message, id_conversation });
   }
 }

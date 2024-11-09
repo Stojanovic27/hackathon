@@ -23,6 +23,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { DatePipe } from '@angular/common';
 
 import { HomeComponent } from './home/home.component';
@@ -53,6 +55,8 @@ import { HomeComponent } from './home/home.component';
     MatAutocompleteModule,
     MatSidenavModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
+    MatToolbarModule,
     HttpClientModule
   ],
   providers: [
