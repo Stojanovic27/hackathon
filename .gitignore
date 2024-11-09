@@ -46,4 +46,4 @@ package-lock.json
 proxy.conf.json
 
 
-/node_modules
+node_modules

@@ -20,7 +20,6 @@
     </div>
   </div>
   
-  
   <mat-sidenav-container>
     <mat-sidenav #sidenav mode="side" [opened]="true">
       <div class="side-content">
@@ -30,7 +29,9 @@
             <mat-icon>chevron_left</mat-icon>
           </button>
         </div>
-  
+        <div class="sidebar-title">Enter shipment details to get fast, AI-powered transport solutions</div>
+          
+        <div class="sidebar-subtitle">To start chat bot, provide your shipment details below to and get real-time assistance from our virtual dispatcher.</div>
         <!-- Loading Locations -->
         <div class="form">
           <!-- Loading Location Section -->
@@ -142,7 +143,7 @@
           <!-- Price -->
           <mat-form-field appearance="outline">
             <mat-label>Price</mat-label>
-            <input matInput [(ngModel)]="selectedPrice" placeholder="Enter price" type="number" />
+            <input matInput [(ngModel)]="selectedPrice" placeholder="Enter price" />
             <mat-icon matSuffix>euro_symbol</mat-icon>
           </mat-form-field>
         </div>
@@ -169,27 +170,40 @@
         <!-- Chatbot in Main Content -->
         <div class="main-content">
           <div class="title-container">
-            <h2 class="title">Chatbot</h2>
+            <!-- <h2 class="title">Chatbot</h2> -->
+            <div class="chatbot-info">
+              <div class="icon-container">
+                <mat-icon>local_shipping</mat-icon>
+              </div>
+              <div class="info">
+                <div class="title">Optimize Your Shipment Tendering with Our AI-Powered Dispatcher</div>
+                <div class="subtitle">This conversation is between you and GRUBER LOGISTICS</div>
+             </div>
+             </div>
           </div>
           <div class="chat-container">
             <div class="chat-box">
               <div class="chat-message">
                 <div class="message user">
                   <div class="message-box">
+                    <div class="user">
+                      <mat-icon class="user-icon">account_circle</mat-icon>
+                    </div>
                     <p>
                       Hi, I'm your virtual assistant. How can I help you today?
                     </p>
                   </div>
-                  <div class="avatar user">A</div>
                 </div>
               </div>
               <div class="chat-message">
                 <div class="message bot">
-                  <div class="avatar bot">A</div>
                   <div class="message-box">
                     <p>
                       Hi, I'm your virtual assistant. How can I help you today?
                     </p>
+                    <div class="bot">
+                      <img src="/avatar.png" alt="Avatar" width="40"/>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -197,12 +211,15 @@
   
             <div class="chat-input-container">
               <div class="chat-input">
-                <input type="text" placeholder="Type a message" />
+                <input class="custom-input" type="text" placeholder="Type a message" />
+                <button class="microphone-button" mat-icon-button color="primary">
+                  <mat-icon class="message-icon">mic</mat-icon>
+                </button>
                 <button class="send-button" mat-icon-button color="primary">
-                  <mat-icon>arrow_forward</mat-icon>
+                  <mat-icon class="message-icon">send</mat-icon>
                 </button>
               </div>
-            </div>
+            </div>          
           </div>
         </div>
       </div>

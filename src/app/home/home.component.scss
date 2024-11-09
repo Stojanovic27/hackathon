@@ -2,6 +2,7 @@
 $background-color: #FFFFFF;
 $primary-button-background: #006A6A;
 $border-color: #BCC9C9;
+$green2: #E4E9E9;
 
 mat-sidenav-container {
   height: calc(100vh - 80px); // Subtract header height
@@ -14,13 +15,13 @@ mat-sidenav-container {
 }
 
 .header { 
-    height: 80px;
+    height: 85px;
     background-color: $background-color;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border-bottom: 0.5px solid $border-color;
-    padding: 0 1rem;
+    padding: 0 20px;
 
     .logo {
         width: 150px;
@@ -30,17 +31,27 @@ mat-sidenav-container {
     }
 
     .language {
-        padding: 1rem;
+        padding: 1rem 0;
     }
 }
 
 .side-content {
-    padding: 16px 20px;
+    padding: 0px 20px 16px 20px;
     background-color: $background-color;
-    height: calc(100% - 32px);
+    height: calc(100% - 22px);
     display: flex;
     flex-direction: column;
     border-right: 0.5px solid $border-color;
+
+    .sidebar-title {
+      font-size: 16px;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-subtitle {
+        font-size: 14px;
+        margin-bottom: 1.5rem;
+      }
     
     .delivery-datetime {
         display: flex;
@@ -56,10 +67,6 @@ mat-sidenav-container {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
-
-      h3 {
-        margin: 0;
-      }
 
       .toggle-btn {
         margin-left: auto;
@@ -104,26 +111,51 @@ mat-sidenav-container {
 
     .title-container {
         // width: 100%;
-        padding-bottom: 10px;
+        // padding-bottom: 10px;
         justify-items: center;
 
         .title {
             margin-top: 0;
             margin-bottom: 10px;
         }
+
+        .chatbot-info {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+            border-bottom: 0.5px solid $border-color;
+
+            .info {
+
+                .title {
+                    font-size: 20px;
+                    text-overflow: ellipsis;
+                }
+
+                .subtitle {
+                    font-size: 16px;
+                    text-overflow: ellipsis;
+                    margin-bottom: 1rem;
+                }
+            }
+        }
     }
 
     .chat-container {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 170px);
-        border: 1px solid #000;
-        border-radius: 0.5rem;
+        height: calc(100vh - 190px);
         background-color: $background-color;
         justify-content: space-between;
 
         .chat-box {
-            padding: 10px;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: scroll;
 
             .chat-message {
                 .message {
@@ -135,35 +167,44 @@ mat-sidenav-container {
                         justify-content: flex-end;
                     }
 
-                    .avatar {
-                        padding: 0.5rem 1rem;
-                        border: 1px solid #000;
-                        border-radius: 45%;
-                        justify-items: center;
-                        background-color: yellow;
-                        align-content: center;
-                        height: 25px;
+                    // .avatar {
+                    //     padding: 0.5rem 1rem;
+                    //     border: 1px solid #000;
+                    //     border-radius: 45%;
+                    //     justify-items: center;
+                    //     background-color: yellow;
+                    //     align-content: center;
+                    //     height: 25px;
 
-                        &.bot {
-                            margin-right: 1rem;
-                        }
+                    //     &.user {
+                    //         margin-right: 1rem;
+                    //     }
+                    // }
 
-                        &.user {
-                            margin-left: 1rem;
-                        }
+                    .user {
+                        display: flex;
+                        font-size: 40px !important;
+                        margin-right: 1rem;
+                    }
+
+                    .bot {
+                        margin-left: 1rem;
                     }
 
                     .message-box {
                         padding: 0.5rem 1rem;
-                        border: 1px solid #000;
+                        border: 1px solid transparent;
                         border-radius: 0.5rem;
-                        background-color: #fff;
+                        background-color: $green2;
                         margin: 0.5rem 0;
                         max-width: 70%;
                         word-wrap: break-word;
+                        display: flex;
+                        flex-direction: row;
 
                         p {
                             margin: 5px 0;
+                            align-content: center;
                         }
                     }
                 }
@@ -171,38 +212,66 @@ mat-sidenav-container {
         }
 
         .chat-input-container {
-            .chat-input {
-                display: flex;
-                align-items: center;
-                margin-top: 10px;
-                border-top: 1px solid #ddd;
-                padding: 10px 20px;
-            }
-        
-            .chat-input input[type="text"] {
-                flex: 1;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                font-size: 1rem;
-            }
-        
-            .send-button {
-                background: none;
-                border: none;
-                margin-left: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+          }
+          
+          .chat-input {
+            display: flex;
+            align-items: center;
+            background-color: white;  
+            border-radius: 20px;  
+            // padding: 5px 10px;
+            width: 100%;
+          }
+          
+          .custom-input {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 16px;
+            border: none;
+            background-color: $green2;  
+            color: black;  
+            border-radius: 5px;  
+            outline: none;  
+            height: 25px;
+          }
+          
+          .custom-input:focus {
+            outline: none;
+          }
+          
+          .send-button, .microphone-button {
+            background-color: transparent;  
+            border: none;  
+            color: black;  
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;  
+            position: absolute;
+          }
 
-                
+            .send-button {
+                right: 30px;
             }
-        
-            .send-button mat-icon {
-                font-size: 24px;
-                color: #007bff;
+
+            .microphone-button {
+                right: 80px;
             }
-        }
+          
+          .send-button mat-icon, .microphone-button mat-icon {
+            font-size: 24px;  
+            color: black;  
+          }
+
+          .message-icon {
+            color: $primary-button-background !important;
+          }
+          
     }
 }
