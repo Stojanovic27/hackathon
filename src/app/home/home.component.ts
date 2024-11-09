@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   service = inject(AuthService);
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   languages = [
     { code: 'en', name: 'English' },
@@ -41,6 +42,7 @@ export class HomeComponent implements OnInit {
   ];
 
   selectedLanguage!: string;
+  isMobile: boolean = window.innerWidth < 768;
 
   loadingLocations: any[] = [];
   unloadingLocations: any[] = [];
@@ -77,6 +79,8 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
+    this.updateIsMobile();
+
     const savedLanguage = localStorage.getItem('selectedLanguage');
     if (savedLanguage) {
       this.selectedLanguage = savedLanguage;
@@ -92,6 +96,27 @@ export class HomeComponent implements OnInit {
 
     // this.startTypingEffect(this.chatbotMessage, 'chatbot');
     // this.startTypingEffect(this.terminalMessage, 'terminal');
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateIsMobile();
+  }
+
+  private updateIsMobile(): void {
+    this.isMobile = window.innerWidth < 768; // Set your mobile breakpoint here
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Scroll to bottom failed:', err);
+    }
   }
 
   // Submit Handler
